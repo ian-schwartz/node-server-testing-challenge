@@ -1,4 +1,5 @@
 const db = require('../data/dbConfig');
+const Players = require('./playersModel');
 
 const { add } = require('./playersModel');
 
@@ -33,5 +34,18 @@ describe('players model', function() {
             expect(player.name).toBe('Kyrie');
             expect(player.id).toBeDefined();
         });
+
+        describe('remove method', () => {
+            it('should delete player from database', async () => {
+                await add({ name: 'Westbrook' })
+                await add({ name: 'Kyrie' })
+                await Players.remove(1)
+                await Players.remove(2)
+
+                const players = await db('players');
+
+                expect(players).toHaveLength(0);
+            })
+        })
     });
 });
